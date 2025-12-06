@@ -1,0 +1,10 @@
+pandas
+openpyxl
+requests
+numpy
+Pillow
+shapely
+matplotlib
+opencv-python-headless
+tqdm
+pytest
