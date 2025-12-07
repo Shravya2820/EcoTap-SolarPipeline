@@ -1,0 +1,26 @@
+{
+  "sample_id": "sample_1234",
+  "lat": 12.9716,
+  "lon": 77.5946,
+  "has_solar": true,
+  "confidence": 0.92,
+  "pv_area_sqm_est": 23.5,
+  "buffer_radius_sqft": 1200,
+  "qc_status": "VERIFIABLE",
+  "bbox_or_mask": {
+    "type": "Polygon",
+    "coordinates": [[[77.5941,12.9712],[77.5948,12.9712],[77.5948,12.9720],[77.5941,12.9720],[77.5941,12.9712]]]
+  },
+  "image_metadata": {
+    "source": "GoogleStatic",
+    "capture_date": "2025-10-01",
+    "provider_zoom": 22,
+    "bbox": [77.5941,12.9712,77.5948,12.9720]
+  },
+  "processing_trace": [
+    {"module":"fetcher","version":"v1.0","timestamp":"2025-11-30T10:12:00Z"},
+    {"module":"preproc","version":"v1.0","sharpness":0.85,"timestamp":"2025-11-30T10:12:05Z"},
+    {"module":"roof_seg","model":"roof_seg_v1","timestamp":"2025-11-30T10:12:10Z"},
+    {"module":"solar_det","model":"solar_det_v1","timestamp":"2025-11-30T10:12:12Z"}
+  ]
+}
