@@ -17,7 +17,7 @@ From repo root:
 
 ```bash
 python -m pipeline.run_inference --input_xlsx inputs/sites.xlsx --output_folder outputs
----
+```
 Notes:
 •	Ensure inputs/sites.xlsx has sample_id, latitude, longitude columns.
 •	Outputs are written to outputs/ as <sample_id>.json and <sample_id>_overlay.png.
