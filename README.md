@@ -1,4 +1,4 @@
-# EcoTap — Rooftop Solar Detection (Documentation)
+# EcoTap — Rooftop Solar Detection
 
 ## Project summary
 EcoTap builds an auditable pipeline that detects rooftop solar panels from satellite imagery, estimates installed PV area using GSD and geometry logic, and writes per-sample JSON + overlay artifacts for verification.
@@ -24,7 +24,7 @@ Notes:
 Where to find things
 •	pipeline/ — inference + preprocessing code
 •	models/ — trained model weights (placed here after training)
-•	training/ — Colab & training scripts (for ML teammate)
+•	training/ — Colab & training scripts 
 •	docs/ — this documentation, model card, diagrams, test reports
 
 Roboflow integration 
