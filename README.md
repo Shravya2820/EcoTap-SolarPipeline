@@ -1,4 +1,4 @@
-# **EcoTap — Rooftop Solar Detection Pipeline**
+# **EcoTap - Rooftop Solar Detection Pipeline**
 
 EcoTap is an end-to-end, auditable pipeline designed to detect rooftop solar panels from satellite imagery, estimate solar PV area using geometric analysis + GSD scaling, and generate fully verifiable JSON + overlay outputs suitable for government evaluation.
 
@@ -108,5 +108,14 @@ Contains sample JSON, overlays, QC checks, and validation notes.
 Complete workflow API documentation (curl, Python, Node.js).
 
 ---
+## **🤝 Team**
+
+Shravya N Bhat
+Shriya M
+Shrinidhi Kati
+
+---
+
+
 
 
