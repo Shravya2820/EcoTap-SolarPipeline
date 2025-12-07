@@ -1,30 +1,23 @@
-"""
-generator.py
-Creates an overlay visualization:
-- Base satellite image
-- Rooftop buffer polygon
-- Solar panel simulation grid
-"""
-
 from PIL import Image, ImageDraw
-from shapely.geometry import Point
-import math
+from shapely.geometry import Point, Polygon
 
 
-def draw_overlay(img_path, polygon, output_path, panel_w=1.0, panel_h=2.0):
+def draw_overlay(img_path, polygon: Polygon, output_path, panel_w=1.0, panel_h=2.0):
     """
-    img_path: satellite image path (JPG/PNG)
-    polygon: shapely Polygon in lat/lon
-    output_path: save overlay image
+    Creates overlay visualization with:
+    - Base satellite image
+    - Rooftop buffer polygon
+    - Solar panel simulation grid
     """
-
-    # Open satellite raster
+    # ----------------------------------------------------------------------
+    # 1. Load base satellite image
+    # ----------------------------------------------------------------------
     base = Image.open(img_path).convert("RGBA")
     draw = ImageDraw.Draw(base, "RGBA")
 
-    # ----------------------------
-    # 1. Normalize polygon coordinates to image pixels
-    # ----------------------------
+    # ----------------------------------------------------------------------
+    # 2. Extract polygon coords and map to pixel space
+    # ----------------------------------------------------------------------
     poly_coords = list(polygon.exterior.coords)
 
     min_x = min(p[0] for p in poly_coords)
@@ -32,19 +25,18 @@ def draw_overlay(img_path, polygon, output_path, panel_w=1.0, panel_h=2.0):
     min_y = min(p[1] for p in poly_coords)
     max_y = max(p[1] for p in poly_coords)
 
-    def to_pixel(p):
-        px = (p[0] - min_x) / (max_x - min_x + 1e-9) * base.width
-        py = (p[1] - min_y) / (max_y - min_y + 1e-9) * base.height
+    def to_pixel(pt):
+        px = (pt[0] - min_x) / (max_x - min_x + 1e-9) * base.width
+        py = (pt[1] - min_y) / (max_y - min_y + 1e-9) * base.height
         return (px, py)
 
     pixel_poly = [to_pixel(p) for p in poly_coords]
 
-    # Draw the rooftop buffer mask
     draw.polygon(pixel_poly, fill=(0, 255, 0, 80), outline=(0, 255, 0, 200))
 
-    # ----------------------------
-    # 2. Simulate panel grid placement
-    # ----------------------------
+    # ----------------------------------------------------------------------
+    # 3. Panel placement simulation
+    # ----------------------------------------------------------------------
     panel_w_px = base.width / 20
     panel_h_px = base.height / 15
 
@@ -56,11 +48,11 @@ def draw_overlay(img_path, polygon, output_path, panel_w=1.0, panel_h=2.0):
             cx = x + panel_w_px / 2
             cy = y + panel_h_px / 2
 
-            # Map pixel center → geo-coordinates
+            # Pixel → geo conversion
             gx = min_x + (cx / base.width) * (max_x - min_x)
             gy = min_y + (cy / base.height) * (max_y - min_y)
 
-            # ✔ FIXED: Must use a Shapely Point(gx, gy)
+            # Correct Shapely check
             if polygon.contains(Point(gx, gy)):
                 rect = [
                     (x, y),
@@ -68,19 +60,16 @@ def draw_overlay(img_path, polygon, output_path, panel_w=1.0, panel_h=2.0):
                     (x + panel_w_px, y + panel_h_px),
                     (x, y + panel_h_px),
                 ]
-                draw.rectangle(rect, fill=(255, 255, 0, 120), outline=(255, 255, 0, 180))
+                draw.rectangle(rect, fill=(255, 255, 0, 120), outline=(255, 255, 0, 200))
                 panel_count += 1
 
-    # Save output image
+    # ----------------------------------------------------------------------
+    # 4. Save final overlay
+    # ----------------------------------------------------------------------
     base.save(output_path)
-
-    # ----------------------------
-    # 3. Estimate solar capacity
-    # ----------------------------
-    total_kw = panel_count * 0.55  # each panel = 550W → 0.55 kW
 
     return {
         "panel_count": panel_count,
-        "total_kw": total_kw,
-        "overlay_path": str(output_path)
+        "total_kw": round(panel_count * 0.55, 2),
+        "overlay_path": output_path
     }
